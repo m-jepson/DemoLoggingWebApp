@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 
 namespace LoggingWebApp
 {
@@ -19,6 +14,11 @@ namespace LoggingWebApp
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging((webHostBuilder, loggingBuilder) =>
+                {
+                    loggingBuilder.AddConfiguration(webHostBuilder.Configuration.GetSection("Logging"));
+                    loggingBuilder.AddNLog();
+                })
                 .UseStartup<Startup>()
                 .Build();
     }
